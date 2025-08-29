@@ -21,8 +21,8 @@ import { getTranslateLanguageFromConfig } from "./utils/language-utils";
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 
 export const siteConfig: SiteConfig = {
-	title: "Mizuki",
-	subtitle: "One demo website",
+	title: "ky的blog",
+	subtitle: "Welcome to my blog!",
 
 	lang: SITE_LANG,
 
@@ -155,7 +155,7 @@ export const navBarConfig: NavBarConfig = {
 			children: [
 				{
 					name: "GitHub",
-					url: "https://github.com/matsuzaka-yuki/Mizuki",
+					url: "https://github.com/akwair",
 					external: true,
 					icon: "fa6-brands:github",
 				},
