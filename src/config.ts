@@ -1,3 +1,4 @@
+import { zh_CN } from "@i18n/languages/zh_CN";
 import type {
 	AnnouncementConfig,
 	CommentConfig,
@@ -24,7 +25,7 @@ export const siteConfig: SiteConfig = {
 	title: "ky的blog",
 	subtitle: "Welcome to my blog!",
 
-	lang: SITE_LANG,
+	lang: 'zh_CN',
 
 	themeColor: {
 		hue: 210, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
@@ -147,6 +148,7 @@ export const navBarConfig: NavBarConfig = {
 	links: [
 		LinkPreset.Home,
 		LinkPreset.Archive,
+		LinkPreset.About,
 		// 支持自定义导航栏链接,并且支持多级菜单,3.1版本新加
 		{
 			name: "链接",
@@ -159,18 +161,18 @@ export const navBarConfig: NavBarConfig = {
 					external: true,
 					icon: "fa6-brands:github",
 				},
-				{
-					name: "Bilibili",
-					url: "https://space.bilibili.com/701864046",
-					external: true,
-					icon: "fa6-brands:bilibili",
-				},
-				{
-					name: "Gitee",
-					url: "https://gitee.com/matsuzakayuki/Mizuki",
-					external: true,
-					icon: "mdi:git",
-				},
+				// {
+				// 	name: "Bilibili",
+				// 	url: "https://space.bilibili.com/701864046",
+				// 	external: true,
+				// 	icon: "fa6-brands:bilibili",
+				// },
+				// {
+				// 	name: "Gitee",
+				// 	url: "https://gitee.com/matsuzakayuki/Mizuki",
+				// 	external: true,
+				// 	icon: "mdi:git",
+				// },
 			],
 		},
 		{
@@ -219,20 +221,20 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: "assets/images/avatar.gif", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
-	name: "Mizuki",
-	bio: "世界很大,一定要去看看",
+	avatar: "assets/images/avatar.jpg", //头像// 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
+	name: "ky.",
+	bio: "欢迎来到我的技能树",
 	links: [
-		{
-			name: "Bilibli",
-			icon: "fa6-brands:bilibili",
-			url: "https://space.bilibili.com/701864046",
-		},
-		{
-			name: "Gitee",
-			icon: "mdi:git",
-			url: "https://gitee.com/matsuzakayuki",
-		},
+		// {
+		// 	name: "Bilibli",
+		// 	icon: "fa6-brands:bilibili",
+		// 	url: "https://space.bilibili.com/1511321003",
+		// },
+		// {
+		// 	name: "Gitee",
+		// 	icon: "mdi:git",
+		// 	url: "https://gitee.com/matsuzakayuki",
+		// },
 		{
 			name: "GitHub",
 			icon: "fa6-brands:github",
@@ -241,9 +243,9 @@ export const profileConfig: ProfileConfig = {
 	],
 	// Umami统计部份，记得在layout插入Umami的head标签
 	umami: {
-		enable: false, // 是否显示umami统计
-		shareId: "", //填入共享URL最后面那一串  比如：https://eu.umami.is/api/share/2dKQ5T0WrUn6AYtr 你就填入2dKQ5T0WrUn6AYtr
-		region: "eu", //Umami有两个区域，按需选择即可  比如：https://eu.umami.is 你就填入eu
+		enable: true, // 是否显示umami统计
+		shareId: "TSLiCcLfhiJv6DQE", //填入共享URL最后面那一串  比如：https://eu.umami.is/api/share/2dKQ5T0WrUn6AYtr 你就填入2dKQ5T0WrUn6AYtr
+		region: "cloud", //Umami有两个区域，按需选择即可  比如：https://eu.umami.is 你就填入eu
 	},
 };
 
@@ -268,7 +270,7 @@ export const commentConfig: CommentConfig = {
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "公告", // 公告标题
-	content: "欢迎来到我的博客！这是一个示例公告。", // 公告内容
+	content: "欢迎来到我的博客!", // 公告内容
 	closable: true, // 允许用户关闭公告
 	link: {
 		enable: true, // 启用链接
