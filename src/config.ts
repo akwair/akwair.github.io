@@ -73,13 +73,13 @@ export const siteConfig: SiteConfig = {
 
 		homeText: {
 			enable: true, // 在主页显示自定义文本
-			title: "Beautiful Mizuki!", // 主页横幅主标题
+			title: "Welcome to my blog!", // 主页横幅主标题
 
 			subtitle: [
-				"A Showcase Demo Site",
-				"Carousel Highlight: Innovation",
-				"Carousel Focus: User Experience",
-				"Carousel Spot: Core Advantages",
+				"ky's technical blog",
+				"Explore the world of coding",
+				"Unlocking Creativity with Code",
+				"Sharing Knowledge, One Post at a Time",
 			],
 			typewriter: {
 				enable: true, // 启用副标题打字机效果
