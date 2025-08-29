@@ -1,19 +1,9 @@
 ---
-title: Markdown Tutorial
-published: 2025-01-20
-pinned: true
-description: A simple example of a Markdown blog post.
-tags: [Markdown, Blogging]
+title: Include Video in the Posts
+published: 2022-08-01
+description: This post demonstrates how to include embedded video in a blog post.
+tags: [Example, Video]
 category: Examples
-licenseName: "Unlicensed"
-author: emn178
-sourceLink: "https://github.com/emn178/markdown"
 draft: false
-date: 2025-01-20
-image:
-  url: 'https://example.com/image.jpg'
-  alt: '图片描述'
-pubDate: 2025-01-20
-series: "Markdown"
 ---
 
