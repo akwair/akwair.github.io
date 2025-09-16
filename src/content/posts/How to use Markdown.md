@@ -5,8 +5,6 @@ description: this is article aboute how to use Markdown
 draft: false
 ---
 
-# How to use Markdown
-
 ## 前言
 作为计算机小白，你是不是也遇到过这样的情景，别人发来了一个.md为后缀的文件而你打开发现里面有一堆奇怪的“#”标识？这非常不方便你的阅读，读完这篇文章，你就会知道这种文件的正确打开方式以及如何编写这样的一个文件。
 
@@ -29,7 +27,6 @@ Markdown,简称md，是一种轻量级标记语言，旨在用简洁的语法实
 编写一个Markdown文件需要掌握一些十分简单的语法，这将大大提高你的码字效率。
 为大家提供一个教程，不过多赘述了（https://blog.csdn.net/qq_37284798/article/details/134118082）
 提醒新手朋友，不要死记语法规则，只需要草草了解然后自己编写一个文档就可以学会Markdown语法了！
-
 
 
 
