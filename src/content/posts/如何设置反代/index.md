@@ -1,0 +1,240 @@
+---
+title:如何设置nginx反代
+published:2025-09-29
+description:反代设置一篇通
+draft:false
+---
+
+前言：本博客是ky的Vue学习笔记，个人观点，若有错误，欢迎指正。有些内容可能没有那么详细，需要你借助Ai或其他资料自行了解
+
+# 一、什么是nginx反代
+
+## 1、反向代理
+
+是一种服务器架构模式，简单来说，它是**位于客户端（如浏览器）和后端业务服务器之间的 “中间服务器”**—— 客户端不直接请求后端服务器，而是请求反向代理服务器，由反向代理服务器转发请求到后端，并将后端的响应返回给客户端。
+
+首先呢，反代避免了服务器直接向外的暴露，其次呢反代为后端服务器设置了统一的进入路径，并且还可以是业务服务器均匀负载。
+
+在web开发中，我们可以使用nginx来解决跨域的问题（自行搜索），怎么说呢，就是我们将前端的get或者post请求发送到反向代理服务器，然后反向代理服务器再将其转发到请求后端。
+
+![IMG_20250929_214205](../../../../IMG_20250929_214205.png)
+
+## 2、nginx
+
+Nginx 是一个高性能的**HTTP 服务器、反向代理服务器**,是实现反代的不二之选。
+
+### 下载地址
+
+https://nginx.org/en/download.html在此地址即可下载nginx
+
+### 文件结构
+
+接下来介绍一下
+
+```
+nginx-1.28.0/
+├── conf/
+│   ├── nginx.conf          # 主配置文件
+│   ├── mime.types          # MIME 类型映射
+│   └── conf.d/             # 子配置目录（可放站点配置，如 default.conf）
+├── html/                   # 默认静态资源目录
+│   ├── index.html          # 默认首页
+│   └── 50x.html            # 错误页（500/502 等）
+├── logs/                   # 日志目录
+│   ├── access.log          # 访问日志
+│   ├── error.log           # 错误日志
+│   └── nginx.pid           # PID 文件（进程 ID）
+├── temp/                   # 临时文件目录
+│   ├── client_body_temp/   # 客户端请求体临时存储
+│   └── proxy_temp/         # 反向代理临时文件
+├── contrib/                # 贡献文件（第三方工具/示例）
+├── docs/                   # 文档目录
+└── nginx.exe               # Windows 可执行程序（启动/管理 Nginx）
+```
+
+
+
+# 二、如何配置nginx反向代理
+
+## 1、打包前端页面
+
+ 在前文我们讲到了nginx的文件结构，在里面个文件夹html,首先先把里面的初始文件删了（index.html和50x.html）,然后将其替换为你打包好的前端页面。
+
+接下来我们讲讲如何打包前端页面，一共有两种方式：
+
+### 使用npm命令
+
+```
+npm run build
+```
+
+### idea构建
+
+在运行按钮旁的npm dev中编辑配置，然后将脚本改为构建后点击运行，如图
+
+![示例图片](image1.png)
+
+打包完毕之后你会发现在项目目录下生成了一个dist文件夹，然后你将dist文件夹中打包好的所有文件（注意是他中的文件，而不是dist文件夹本身）复制到nginx中的html文件下即可
+
+## 2、运行后端代码
+
+打包号前端之后，我们需要运行后端代码，这一步很简单，点击运行即可，且在测试过程中保持开启
+
+## 3、路径对接
+
+### 修改nginx.conf配置文件
+
+```
+# user指令用于设置Nginx worker进程运行的用户，默认注释掉，一般使用系统默认用户运行
+#user  nobody; 
+worker_processes  1;
+
+# error_log用于配置错误日志的路径和日志级别，默认被注释掉，有多种日志级别可选，如debug、info、notice、warn、error、crit等
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+# pid指令指定Nginx主进程的PID文件路径，默认被注释掉
+#pid        logs/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    # log_format定义日志格式，这里定义了名为main的日志格式，记录了客户端IP、用户、时间、请求、状态码等信息，默认被注释掉
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    # access_log指定访问日志的路径和使用的日志格式，默认被注释掉
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    # tcp_nopush开启后，在数据传输时，Nginx会将多个小的数据包合并成一个大的数据包进行发送，提高网络传输效率，默认被注释掉
+    #tcp_nopush     on;
+
+    # keepalive_timeout设置客户端与Nginx之间的长连接超时时间，默认被注释掉，0表示关闭长连接
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    # gzip开启后，Nginx会对发送给客户端的数据进行压缩，减少数据传输量，提高传输速度，默认被注释掉
+    #gzip  on;
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        # charset用于设置网页的字符编码，默认被注释掉
+        #charset koi8-r;
+
+        # access_log指定当前server块的访问日志路径和日志格式，默认被注释掉
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        # error_page用于配置错误页面的跳转，当出现404错误时，跳转到/404.html，默认被注释掉
+        #error_page  404              /404.html;
+
+        location /api/ {
+            proxy_pass http://localhost:8080/;
+            
+        }
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+        # 以下是处理PHP脚本相关的配置，默认被注释掉
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+
+    # 以下是另一个虚拟主机的配置示例，默认被注释掉
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # 以下是HTTPS服务器的配置示例，默认被注释掉
+    # HTTPS server
+    #
+    #server {
+    #    listen       443 ssl;
+    #    server_name  localhost;
+
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers  on;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+}
+```
+
+你需要注意的是，这一串：
+
+```
+location /api/ {
+            proxy_pass http://localhost:8080/;
+            
+        }
+```
+
+/api/代表他会自动匹配前端请求中的/api/字段的请求,并为其提供代理，如：“http://localhost:8080/api/path”
+
+此外需要注意的是proxy_pass中如若是以/结尾的那么如“http://localhost:8080/api/path”的路径会被替换为“http://localhost:8080/path”，反之则为“http://localhost:8080/api/path”
+
+需要注意的是，若前端向/api/path发起请求，若proxy_pass是proxy_pass http://localhost:8080/;那么后端的监听路径应该是/path而不是/api/path
+
+## 4、启动nginx
+
+符合上述规则之后你就可以双击启动nginx了，由黑框一闪而过，那就是启动成功了
+
+这时你访问http://localhost就可以访问打包好的可与后端交互的前端网页了。
+
+
+
