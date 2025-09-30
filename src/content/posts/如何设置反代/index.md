@@ -17,13 +17,15 @@ draft: false
 
 在web开发中，我们可以使用nginx来解决跨域的问题（自行搜索），怎么说呢，就是我们将前端的get或者post请求发送到反向代理服务器，然后反向代理服务器再将其转发到请求后端。
 
+![image1](image1.png)
+
 ## 2、nginx
 
 Nginx 是一个高性能的**HTTP 服务器、反向代理服务器**,是实现反代的不二之选。
 
 ### 下载地址
 
-https://nginx.org/en/download.html在此地址即可下载nginx
+[下载地址](https://nginx.org/en/download.html) 在此地址即可下载nginx
 
 ### 文件结构
 
@@ -71,6 +73,8 @@ npm run build
 在运行按钮旁的npm dev中编辑配置，然后将脚本改为构建后点击运行
 
 打包完毕之后你会发现在项目目录下生成了一个dist文件夹，然后你将dist文件夹中打包好的所有文件（注意是他中的文件，而不是dist文件夹本身）复制到nginx中的html文件下即可
+
+![image2](image2.png)
 
 ## 2、运行后端代码
 
@@ -224,13 +228,13 @@ location /api/ {
 
 此外需要注意的是proxy_pass中如若是以/结尾的那么如“http://localhost:8080/api/path”的路径会被替换为“http://localhost:8080/path”，反之则为“http://localhost:8080/api/path”
 
-需要注意的是，若前端向/api/path发起请求，若proxy_pass是proxy_pass http://localhost:8080/;那么后端的监听路径应该是/path而不是/api/path
+需要注意的是，若前端向/api/path发起请求，若proxy_pass是proxy_pass “http://localhost:8080/”;那么后端的监听路径应该是/path而不是/api/path
 
 ## 4、启动nginx
 
 符合上述规则之后你就可以双击启动nginx了，由黑框一闪而过，那就是启动成功了
 
-这时你访问http://localhost就可以访问打包好的可与后端交互的前端网页了。
+这时你访问“http://localhost”就可以访问打包好的可与后端交互的前端网页了。
 
 
 
