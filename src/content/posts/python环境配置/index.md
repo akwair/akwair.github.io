@@ -35,7 +35,7 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 1、首先，下载vscode,(下载网址)[https://code.visualstudio.com/]
 
-2、你要注意。vscode是一款编辑器，也就是说，它本身是不能进行编译的，但依托于他强大的插件生态，vscode已经有非常完美的功能，你在没有插件的情况下运行，会出现如下弹窗,这就是因为没有插件
+2、你要注意。vscode是一款编辑器，也就是说，它本身是不能进行编译的，但依托于他强大的插件生态，vscode已经有非常完美的功能，你在没有插件的情况下运行，会出现如下弹窗
 
 ![](image0.png)
 
