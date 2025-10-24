@@ -1,5 +1,5 @@
 ---
-title: 梯度下降
+title: 梯度下降（GD）
 published: 2025-10-20
 description: 梯度下降学习笔记
 draft: false
