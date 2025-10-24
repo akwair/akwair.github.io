@@ -1,5 +1,5 @@
 ---
-title: 循环神经网络（CNN）
+title: 循环神经网络（RNN）
 published: 2025-10-24
 description: 循环神经网络学习笔记
 draft: false
