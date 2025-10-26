@@ -47,3 +47,68 @@ $$\text{sigmoid}(x) = \frac{1}{1 + \exp(-x)}, \text{ReLU}(x) = \max(x, 0)$$
 | 结构       | 无隐藏层             | 至少 1 个隐藏层                |
 | 非线性能力 | 仅能处理线性可分问题 | 可处理非线性问题（因激活函数） |
 | 表达能力   | 有限（线性模型）     | 强（万能近似定理）             |
+
+
+
+# 三、多层感知机预测房价
+
+```python
+from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+import torch
+import torch.nn as nn
+from torch.optim import SGD
+from sklearn.metrics import r2_score
+
+data=fetch_california_housing()
+
+X,Y=data.data,data.target
+#标准化特征值
+scaler=StandardScaler()
+X=scaler.fit_transform(X)
+
+#随机分配训练集和测试集
+Xtrain,Xtest,Ytrain,Ytest=train_test_split(X,Y,train_size=0.7,test_size=0.3,random_state=10)
+#转化为张量
+Xtrain=torch.tensor(Xtrain,dtype=torch.float32)
+Xtest=torch.tensor(Xtest,dtype=torch.float32)
+Ytrain=torch.tensor(Ytrain.reshape(-1,1),dtype=torch.float32)
+Ytest=torch.tensor(Ytest.reshape(-1,1),dtype=torch.float32)
+#搭建模型
+class Model(torch.nn.Module):
+    def __init__(self,input_size):
+        super().__init__()
+        self.layers=nn.Sequential(
+            nn.Linear(input_size,4),
+            nn.ReLU(),#sigmoid激活效果不好，这里采用relu
+            nn.Linear(4,1) 
+        )
+    #前向传播    
+    def forward(self,input):
+        return self.layers(input)
+
+#实例化模型，构建损失函数与优化函数
+model=Model(Xtrain.shape[1])
+criterion=nn.MSELoss()
+optimizer=torch.optim.SGD(model.parameters(),lr=0.001)#传入模型所有参数，设置梯度下降步长
+
+#在训练集上训练模型
+for i in range(1000):
+    model.train()
+    optimizer.zero_grad()
+    pre=model(Xtrain)
+    loss=criterion(pre,Ytrain) 
+    if((i+1)%100==0):
+        print(f"loss:{loss.item():.6f}")
+    loss.backward()
+    optimizer.step()
+
+#测试模型
+model.eval()
+with torch.no_grad():
+    result=model(Xtest)
+    R=r2_score(Ytest.numpy(),result.numpy())
+    print(f"R平方={R:.6f}")
+```
+
