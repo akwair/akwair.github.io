@@ -143,3 +143,173 @@ conda activate 环境名
 conda deactivate
 ```
 
+
+
+# 六、wsl环境配置
+
+## 1、何谓wsl
+
+wsl即Windows Subsystem for Linux，是 Windows 系统内置的 Linux 子系统，让你能在windows上使用linux环境
+
+他依赖底层的依赖 Hyper-V虚拟化平台，使你的windows系统成为了一个大型的虚拟机，而linux成为了另外一个虚拟机，两者在用户空间可以直接通信。
+
+| 层级     | Windows 侧组件        | Linux 侧组件（WSL2）  | 交互关系                     |
+| -------- | --------------------- | --------------------- | ---------------------------- |
+| 用户空间 | Windows 应用程序      | Linux 命令 / 程序     | 各自独立，通过系统调用互通   |
+| 内核层   | Windows 内核          | 独立 Linux 内核       | 均依赖 Hypervisor 虚拟化平台 |
+| 虚拟化层 | Hypervisor（Hyper-V） | Hypervisor（Hyper-V） | 统一资源调度，隔离双内核环境 |
+
+## 2、前提
+
+- 开启虚拟化（电脑默认开启）
+
+检查方式：win+x打开任务管理器,选择性能-CPU，然后下方有一个虚拟化，若显示已开启，那就正确
+
+![](image8.png)
+
+若显示未启用，则需进入Bios进行设置，
+
+在 BIOS（或 UEFI）里开启虚拟化，一般称为 **Intel VT-x** 或 **AMD-V**。下面是一个通用步骤，不同品牌按键和菜单名字可能略有不同。
+
+###  重启电脑并进入 BIOS/UEFI
+
+开机时按以下其一（不同品牌不同）：
+
+| 品牌 | 常用进入 BIOS 按键 |
+| ---- | ------------------ |
+| 通用 | **Del** 或 **F2**  |
+| 联想 | F1 / F2 / Fn+F2    |
+| 华硕 | F2 / Del           |
+| 惠普 | Esc → F10          |
+| 戴尔 | F2                 |
+
+> 提示：看到品牌 logo 时迅速连续按。
+
+###  找到虚拟化设置（关键词）
+
+进入 BIOS 后，按方向键或鼠标导航，找到以下菜单之一：
+
+可能在的菜单名称如下：
+
+- **Advanced**（高级）
+- **Advanced BIOS Features**
+- **CPU Configuration**
+- **System Configuration**
+- **Security → Virtualization**
+- **Advanced → SVM Mode**（AMD）
+
+你要找的选项名字可能是：
+
+| 处理器 | BIOS中显示的名称                                             |
+| ------ | ------------------------------------------------------------ |
+| Intel  | **Intel Virtualization Technology (VT-x)**、**Intel VT**, **Virtualization Support** |
+| AMD    | **SVM Mode**、**AMD-V**                                      |
+
+###  启用虚拟化
+
+将该选项设置为：
+
+```
+Enabled
+```
+
+###  保存并重启
+
+按 **F10** 保存退出。
+
+---
+
+- 开启两个windows服务
+
+在任务栏搜索功能功能，打开启用或关闭windows功能，然后勾选上适用于linux的windows子系统和虚拟机平台，然后按提示重启电脑
+
+![](image9.png)
+
+## 3、安装wsl
+
+### 流程
+
+首先以管理员权限打开cmd，然后输入以下指令
+
+```shell
+wsl --install 
+```
+
+如果你是国内网络，那么用如下命令可能会好一点（不保证）
+
+```shell
+wsl --install --web-download
+```
+
+然后就会下载默认的Ubuntu
+
+如果你想查看和安装其他版本的linux你可以执行如下命令：
+
+```shell
+wsl --list --online
+wsl --install <name>
+```
+
+查看已安装系统:
+
+```shell
+wsl --list -v
+```
+
+切换默认子系统：
+
+```shell
+wsl --set-default <dir>
+```
+
+当你需要开启子系统的时候，直接打开对于的命令窗口即可开启
+
+当你想卸载一个子系统时：
+
+```shell
+wsl --unregister <name>
+```
+
+备份一个子系统（结合导入来切换wsl的安装位置）：
+
+```shell
+wsl --export <name> <name.tar>
+```
+
+导入一个文件：
+
+```shell
+wsl --import <name> <dir> <import-packagename.tar>
+```
+
+---
+
+### 下面举个例子，怎么导入到D盘：
+
+1. 查看你安装的发行版名称：
+
+```shell
+wsl -l -v
+```
+
+1. 导出发行版到 D 盘：
+
+```shell
+wsl --export Ubuntu D:\WSL\Ubuntu.tar
+```
+
+> 目录可自定义，如 `D:\WSL\` 必须存在，否则先创建。
+
+1. 注销原发行版（会删除 C盘中的 WSL 文件）：
+
+```shell
+wsl --unregister Ubuntu
+```
+
+1. 从 D盘重新导入：
+
+```shell
+wsl --import Ubuntu D:\WSL\Ubuntu D:\WSL\Ubuntu.tar
+```
+
+执行后，Ubuntu 就装在 D:\WSL\Ubuntu 了。
